@@ -21,10 +21,14 @@ def lametric_data():
             return jsonify({"frames": [{"text": "API error", "icon": "i2309"}]})
 
         data = response.json()
-        album = data["currentAlbum"]["album"]
-        artist = data["currentAlbum"]["artist"]
-        index = data["currentAlbumNumber"]
-        total = data["totalAlbums"]
+
+        if "currentAlbum" not in data or data["currentAlbum"] is None:
+            return jsonify({"frames": [{"text": "Ingen album tildelt endnu", "icon": "i2309"}]})
+
+        album = data["currentAlbum"].get("album", "Ukendt album")
+        artist = data["currentAlbum"].get("artist", "Ukendt kunstner")
+        index = data.get("currentAlbumNumber", "?")
+        total = data.get("totalAlbums", "?")
 
         return jsonify({
             "frames": [
