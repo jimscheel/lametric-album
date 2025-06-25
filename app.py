@@ -25,7 +25,7 @@ def lametric_data():
         if "currentAlbum" not in data or data["currentAlbum"] is None:
             return jsonify({"frames": [{"text": "Ingen album tildelt endnu", "icon": "i2309"}]})
 
-        album = data["currentAlbum"].get("album", "Ukendt album")
+        album = data["currentAlbum"].get("albumTitle", "Ukendt album")
         artist = data["currentAlbum"].get("artist", "Ukendt kunstner")
         index = data.get("currentAlbumNumber", "?")
         total = data.get("totalAlbums", "?")
