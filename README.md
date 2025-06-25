@@ -6,25 +6,25 @@ This is a LaMetric Time app that shows your daily album from [1001albumsgenerato
 
 The app connects to the 1001 Albums Generator API and displays:
 
-- The current album title
-- The artist name
+- The current album title  
+- The artist name  
 - Your current progress (e.g., "Album 37 of 1001" or "FINISHED")
 
 ## Requirements
 
-- A LaMetric Time device
-- An account at [1001albumsgenerator.com](https://1001albumsgenerator.com)
+- A LaMetric Time device  
+- An account at [1001albumsgenerator.com](https://1001albumsgenerator.com)  
 - Your personal project slug
 
 ## Setup
 
-1. Install the app on your LaMetric device
-2. Enter your project slug in the app settings (e.g., `5870172f8f29d43180874ckd`)
+1. Install the app on your LaMetric device  
+2. Enter your project slug in the app settings (e.g., `6830174f8f99d23180874bfb`)  
 3. The app will show your current album and progress
 
 ## Polling frequency
 
-Since the 1001 Albums Generator updates daily, we recommend a polling interval of once or twice per day.
+The app is designed to check for updates every **12 hours**, as the 1001 Albums Generator typically updates once per day.
 
 ## Privacy
 
