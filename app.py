@@ -34,7 +34,7 @@ def lametric():
         return jsonify({
             "frames": [
                 {
-                    "icon": "i1186",
+                    "icon": "68818",
                     "text": f"{album_name} – {artist}"
                 },
                 {
