@@ -1,69 +1,45 @@
-from flask import Flask, request, jsonify
+
+from flask import Flask, jsonify, request
 import requests
 
 app = Flask(__name__)
 
-API_TOKEN = "2hahnhmaanawnf5ahualksqkwFacbCCBekdazcKnAoVaJaasuae8AkdlAa30dpeb"
 API_BASE_URL = "https://1001albumsgenerator.com/api/v1/projects/"
+API_TOKEN = "2hahnhmaanawnf5ahualksqkwFacbCCBekdazcKnAoVaJaasuae8AkdlAa30dpeb"
 
 @app.route("/lametric", methods=["GET"])
-def lametric_data():
-    slug = request.args.get("slug")
+def lametric():
+    slug = request.headers.get("slug")
     if not slug:
-        return jsonify({"frames": [{"text": "Missing slug", "icon": "i2309"}]})
+        return jsonify({"frames": [{"icon": "i2309", "text": "No slug provided"}]}), 400
 
+    api_url = f"{API_BASE_URL}{slug}"
+    headers = {"x-api-access": API_TOKEN}
     try:
-        response = requests.get(
-            f"{API_BASE_URL}{slug}",
-            headers={"x-api-access": API_TOKEN}
-        )
-        if response.status_code != 200:
-            return jsonify({"frames": [{"text": "API error", "icon": "i2309"}]})
-
+        response = requests.get(api_url, headers=headers)
+        response.raise_for_status()
         data = response.json()
 
-        if "currentAlbum" not in data or data["currentAlbum"] is None:
-            return jsonify({"frames": [{"text": "Ingen album tildelt endnu", "icon": "i2309"}]})
-
-        album = data["currentAlbum"].get("name", "Ukendt album")
-        artist = data["currentAlbum"].get("artist", "Ukendt kunstner")
-        history_length = len(data.get("history", []))
-        current_album_number = history_length + 1
-        total_albums = 1001
-
-        if current_album_number > total_albums:
-            progress_text = "FINISHED"
-        else:
-            progress_text = f"Album {current_album_number} af {total_albums}"
+        album_data = data.get("currentAlbum")
+        history_data = data.get("history", [])
+        current_album_name = album_data.get("name", "Unknown Album")
+        artist_name = album_data.get("artist", "Unknown Artist")
+        total_revealed = sum(1 for entry in history_data if entry.get("revealedAlbum"))
+        progress_text = f"Album {total_revealed + 1} af 1001" if total_revealed < 1001 else "FINISHED"
 
         return jsonify({
             "frames": [
-                {
-                    "text": f"{album} – {artist}",
-                    "icon": "i1186"
-                },
-                {
-                    "text": progress_text,
-                    "icon": "i2376"
-                }
+                {"icon": "i1186", "text": f"{current_album_name} – {artist_name}"},
+                {"icon": "i2376", "text": progress_text}
             ]
         })
-
     except Exception as e:
-        import traceback
         return jsonify({
             "frames": [
-                {
-                    "text": f"Fejl: {str(e)}",
-                    "icon": "i2309"
-                },
-                {
-                    "text": traceback.format_exc().splitlines()[-1],
-                    "icon": "i2309"
-                }
+                {"icon": "i2309", "text": "Fejl"},
+                {"icon": "i2309", "text": str(e)}
             ]
         })
-
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(debug=True)
