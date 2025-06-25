@@ -1,0 +1,47 @@
+from flask import Flask, request, jsonify
+import requests
+
+app = Flask(__name__)
+
+API_TOKEN = "2hahnhmaanawnf5ahualksqkwFacbCCBekdazcKnAoVaJaasuae8AkdlAa30dpeb"
+API_BASE_URL = "https://1001albumsgenerator.com/api/v1/projects/"
+
+@app.route("/lametric", methods=["GET"])
+def lametric_data():
+    slug = request.args.get("slug")
+    if not slug:
+        return jsonify({"frames": [{"text": "Missing slug", "icon": "i2309"}]})
+
+    try:
+        response = requests.get(
+            f"{API_BASE_URL}{slug}",
+            headers={"x-api-access": API_TOKEN}
+        )
+        if response.status_code != 200:
+            return jsonify({"frames": [{"text": "API error", "icon": "i2309"}]})
+
+        data = response.json()
+        album = data["currentAlbum"]["album"]
+        artist = data["currentAlbum"]["artist"]
+        index = data["currentAlbumNumber"]
+        total = data["totalAlbums"]
+
+        return jsonify({
+            "frames": [
+                {
+                    "text": f"{album} – {artist}",
+                    "icon": "i1186"
+                },
+                {
+                    "text": f"Album {index} af {total}",
+                    "icon": "i2376"
+                }
+            ]
+        })
+
+    except Exception:
+        return jsonify({"frames": [{"text": "Serverfejl", "icon": "i2309"}]})
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
