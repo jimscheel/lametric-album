@@ -1,45 +1,49 @@
 
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
 import requests
 
 app = Flask(__name__)
 
-API_BASE_URL = "https://1001albumsgenerator.com/api/v1/projects/"
-API_TOKEN = "2hahnhmaanawnf5ahualksqkwFacbCCBekdazcKnAoVaJaasuae8AkdlAa30dpeb"
-
-@app.route("/lametric", methods=["GET"])
+@app.route("/lametric")
 def lametric():
-    slug = request.headers.get("slug")
+    slug = request.args.get("slug") or request.headers.get("slug")
     if not slug:
-        return jsonify({"frames": [{"icon": "i2309", "text": "No slug provided"}]}), 400
+        return jsonify({
+            "frames": [{
+                "icon": "i5555",
+                "text": "Missing slug"
+            }]
+        })
 
-    api_url = f"{API_BASE_URL}{slug}"
-    headers = {"x-api-access": API_TOKEN}
+    api_url = f"https://1001albumsgenerator.com/api/v1/projects/{slug}"
+    headers = {"x-api-access": "2hahnhmaanawnf5ahualksqkwFacbCCBekdazcKnAoVaJaasuae8AkdlAa30dpeb"}
+
     try:
         response = requests.get(api_url, headers=headers)
-        response.raise_for_status()
         data = response.json()
-
-        album_data = data.get("currentAlbum")
-        history_data = data.get("history", [])
-        current_album_name = album_data.get("name", "Unknown Album")
-        artist_name = album_data.get("artist", "Unknown Artist")
-        total_revealed = sum(1 for entry in history_data if entry.get("revealedAlbum"))
-        progress_text = f"Album {total_revealed + 1} af 1001" if total_revealed < 1001 else "FINISHED"
+        album = data["currentAlbum"]["album"]
+        album_name = album["name"]
+        artist = album["artist"]
+        total_albums = data["totalAlbums"]
+        current_index = data["revealedAlbumsCount"]
+        progress_text = "FINISHED" if current_index >= total_albums else f"Album {current_index+1} af {total_albums}"
 
         return jsonify({
             "frames": [
-                {"icon": "i1186", "text": f"{current_album_name} – {artist_name}"},
-                {"icon": "i2376", "text": progress_text}
+                {
+                    "icon": "i1186",
+                    "text": f"{album_name} – {artist}"
+                },
+                {
+                    "icon": "i2376",
+                    "text": progress_text
+                }
             ]
         })
     except Exception as e:
         return jsonify({
-            "frames": [
-                {"icon": "i2309", "text": "Fejl"},
-                {"icon": "i2309", "text": str(e)}
-            ]
+            "frames": [{
+                "icon": "i5555",
+                "text": "Error fetching album"
+            }]
         })
-
-if __name__ == "__main__":
-    app.run(debug=True)
