@@ -19,7 +19,7 @@ The app connects to the 1001 Albums Generator API and displays:
 ## Setup
 
 1. Install the app on your LaMetric device
-2. Enter your project slug in the app settings (e.g., `6830174f8f99d23180874bfb`)
+2. Enter your project slug in the app settings (e.g., `5870172f8f29d43180874ckd`)
 3. The app will show your current album and progress
 
 ## Polling frequency
