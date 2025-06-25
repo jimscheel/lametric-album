@@ -27,8 +27,14 @@ def lametric_data():
 
         album = data["currentAlbum"].get("name", "Ukendt album")
         artist = data["currentAlbum"].get("artist", "Ukendt kunstner")
-        index = data.get("currentAlbumNumber", "?")
-        total = data.get("totalAlbums", "?")
+        history_length = len(data.get("history", []))
+        current_album_number = history_length + 1
+        total_albums = 1001
+
+        if current_album_number > total_albums:
+            progress_text = "FINISHED"
+        else:
+            progress_text = f"Album {current_album_number} af {total_albums}"
 
         return jsonify({
             "frames": [
@@ -37,7 +43,7 @@ def lametric_data():
                     "icon": "i1186"
                 },
                 {
-                    "text": f"Album {index} af {total}",
+                    "text": progress_text,
                     "icon": "i2376"
                 }
             ]
