@@ -38,7 +38,7 @@ def lametric():
                     "text": f"{album_name} – {artist}"
                 },
                 {
-                    "icon": "i2376",
+                    "icon": "68819",
                     "text": progress_text
                 }
             ]
