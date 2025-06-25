@@ -39,8 +39,20 @@ def lametric_data():
             ]
         })
 
-    except Exception:
-        return jsonify({"frames": [{"text": "Serverfejl", "icon": "i2309"}]})
+    except Exception as e:
+        import traceback
+        return jsonify({
+            "frames": [
+                {
+                    "text": f"Fejl: {str(e)}",
+                    "icon": "i2309"
+                },
+                {
+                    "text": traceback.format_exc().splitlines()[-1],
+                    "icon": "i2309"
+                }
+            ]
+        })
 
 
 if __name__ == "__main__":
