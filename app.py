@@ -29,13 +29,16 @@ def lametric():
         total_albums = 1001
         current_index = len(data.get("history", []))
 
-        progress_text = "FINISHED" if current_index >= total_albums else f"Album {current_index + 1} af {total_albums}"
+        if current_index >= total_albums:
+            progress_text = "PROGRESS: FINISHED"
+        else:
+            progress_text = f"PROGRESS: Album {current_index + 1} of {total_albums}"
 
         return jsonify({
             "frames": [
                 {
                     "icon": "68818",
-                    "text": f"{album_name} – {artist}"
+                    "text": f"TODAY'S ALBUM: {album_name} – {artist}"
                 },
                 {
                     "icon": "68819",
