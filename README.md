@@ -24,7 +24,7 @@ The app connects to the 1001 Albums Generator API and displays:
 
 ## Polling frequency
 
-The app is designed to check for updates every **12 hours**, as the 1001 Albums Generator typically updates once per day.
+The app is designed to check for updates every **1 hours**, as the 1001 Albums Generator typically updates once per day.
 
 ## Privacy
 
